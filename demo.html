@@ -18,8 +18,93 @@
   </head>
 
   <body>
-    <p>An example of using <code>&lt;observe-array-items></code>:</p>
+    <h1><code>&lt;observe-array-items></code> Demo</h1>
 
-    <observe-array-items></observe-array-items>
+    <p>
+      This demo illustrates setting up an event which is fired whenever a specific
+      property of any item in an array changes.
+    </p>
+
+    <p>
+      Here, we're observing changes to the <code>home.phone</code> property of each item in <code>contacts</code>.
+      When a change occurs, we log information about the changed element in the <code>array-item-changed</code> event handler.
+    </p>
+
+    <p>
+      The event handler will be fired whenever the observed property of any item in the array changes,
+      regardless of whether or not the change is made via a Polymer binding.
+    </p>
+
+    <p>
+      Click the button below to change a random contact's phone number.
+      The <code>array-item-changed</code> event handler will only be fired if the phone number
+      actually gets updated.
+    </p>
+
+    <template is="auto-binding" id="page-template">
+      <observe-array-items array="{{contacts}}"
+                           path="home.phone"
+                           on-array-item-changed="{{handlePhoneNumberChanged}}">
+      </observe-array-items>
+
+      <h3>Contacts</h3>
+      <ul>
+        <template repeat="{{contact in contacts}}">
+          <li>{{contact.name}} | {{contact.home.address}} | {{contact.home.phone}}</li>
+        </template>
+      </ul>
+      <button on-tap="{{handleRandomizePhoneNumber}}">Set a Random Contact's Phone to '555-999-9999'</button>
+
+      <h4>Change Log</h4>
+      <ol>
+        <template repeat="{{message in messages}}">
+          <li>{{message}}</li>
+        </template>
+      </ol>
+    </template>
+
+    <script>
+      var template = document.querySelector('#page-template');
+
+      template.messages = [];
+
+      template.contacts = [
+        {
+          name: 'Alice',
+          home: {
+            address: '123 Fake Street',
+            phone: '555-123-3434'
+          }
+        },
+        {
+          name: 'Bob',
+          home: {
+            address: '89 Fake Blvd',
+            phone: '555-555-3434'
+          }
+        },
+        {
+          name: 'Carol',
+          home: {
+            address: '34 Fake Ln',
+            phone: '555-333-4444'
+          }
+        }
+      ];
+
+      template.handleRandomizePhoneNumber = function() {
+        var randomContact = template.contacts[Math.floor(Math.random() * template.contacts.length)];
+        randomContact.home.phone = '555-999-9999';
+      };
+
+      template.handlePhoneNumberChanged = function(e) {
+        var changedContact = template.contacts[e.detail.index];
+
+        template.messages.push(
+            changedContact.name + '\'s phone number changed from '
+            + e.detail.oldValue + ' to ' + e.detail.newValue
+        );
+      };
+    </script>
   </body>
 </html>
