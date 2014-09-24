@@ -1,0 +1,103 @@
+<!--
+    @license
+    Copyright 2014 Google Inc
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+        http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+-->
+<link rel="import" href="../polymer/polymer.html">
+
+<!--
+A Polymer element to observe changes to the properties of items in an array.
+
+##### Example
+
+    <observe-array-items array="{{contacts}}"
+                         path="home.phone"
+                         on-array-item-changed="{{handleArrayItemChanged}}">
+    </observe-array-items>
+
+@element observe-array-items
+@blurb A Polymer element to observe changes to the properties of items in an array.
+@status alpha
+@homepage https://jeffposnick.github.io/observe-array-items
+-->
+<polymer-element name="observe-array-items" attributes="array path">
+  <script>
+    Polymer({
+      /**
+       * The `array` attribute sets the `Array` containing the `Object`s whose
+       * properties we're watching.
+       *
+       * This is required.
+       * 
+       * @attribute array
+       * @type Array
+       */
+      array: null,
+      
+      /**
+       * The `path` attribute determines which properties we're observing.
+       *
+       * This value will be passed in to the [`PathObserver`](https://github.com/polymer/observe-js#pathobserver)
+       * constructor, so this supports [`Path`](https://github.com/polymer/observe-js#path-objects)
+       * objects as well as strings, though strings are the most common use case.
+       *
+       * The default value of `''` signifies that the root object is being observed.
+       * 
+       * @property path
+       * @type string
+       * @default ''
+       */
+      path: '',
+
+      /**
+       * The `array-item-changed` event is fired whenever there is a change to the property
+       * matching path `this.path` of an `Object` in `this.array`.
+       * 
+       * @event array-item-changed
+       * @param {Object} detail
+       *   @param {Object} detail.oldValue The previous value for the property at `this.path`.
+       *   @param {Object} detail.newValue The current value for the property at `this.path`.
+       *   @param {Number} detail.index The index of the item in `this.array` whose property changed.
+       */
+
+
+      _observers: null,
+
+      arrayChanged: function() {
+        this._observers.forEach(function(observer) {
+          observer.close();
+        });
+        this._observers = [];
+
+        this.array.forEach(function(item, i) {
+          var observer = new PathObserver(item, this.path);
+
+          observer.open(function(newValue, oldValue) {
+            this.asyncFire('array-item-changed', {
+              oldValue: oldValue,
+              newValue: newValue,
+              index: i
+            });
+          }.bind(this));
+
+          this._observers.push(observer);
+        }.bind(this));
+      },
+
+      ready: function() {
+        this._observers = [];
+      }
+    });
+  </script>
+</polymer-element>

@@ -1,0 +1,31 @@
+{
+  "name": "observe-array-items",
+  "authors": [
+    "Jeff Posnick <jeffy@google.com>"
+  ],
+  "description": "A Polymer element to observe changes to the properties of items in an array.",
+  "keywords": "observe, array, properties, mutation, polymer, web-components",
+  "main": "observe-array-items.html",
+  "license": "Apache-2.0",
+  "homepage": "https://github.com/jeffposnick/observe-array-items/",
+  "ignore": [
+    "**/.*",
+    "test",
+    "tests",
+    ".bowerrc"
+  ],
+  "dependencies": {
+    "polymer": "Polymer/polymer#>=0.4.1 <1.0.0",
+    "polymer-test-tools": "Polymer/polymer-test-tools#>=0.4.1 <1.0.0"
+  },
+  "_release": "fea07365e4",
+  "_resolution": {
+    "type": "branch",
+    "branch": "1.0.0",
+    "commit": "fea07365e4b8a416261816c0dc410cee060ad66c"
+  },
+  "_source": "git://github.com/jeffposnick/observe-array-items.git",
+  "_target": "1.0.0",
+  "_originalSource": "jeffposnick/observe-array-items",
+  "_direct": true
+}
